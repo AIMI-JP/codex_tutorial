@@ -1,26 +1,19 @@
 {
-  "name": "codex_tutorial",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "vitest run",
-    "dev": "vite",
-    "build": "tsc -b && vite build",
-    "preview": "vite preview",
-    "test:watch": "vitest",
-    "typecheck": "tsc --noEmit"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "name": "codex_tutorial_monorepo",
   "private": true,
-  "type": "module",
-  "devDependencies": {
-    "@vitest/coverage-v8": "latest",
-    "jsdom": "latest",
-    "typescript": "latest",
-    "vite": "latest",
-    "vitest": "latest"
+  "workspaces": [
+    "apps/web",
+    "apps/windows",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev:web": "npm --prefix apps/web run dev",
+    "test:web": "npm --prefix apps/web run test",
+    "typecheck:web": "npm --prefix apps/web run typecheck",
+    "dev:windows": "npm --prefix apps/windows run dev",
+    "test:windows": "npm --prefix apps/windows run test",
+    "typecheck:windows": "npm --prefix apps/windows run typecheck",
+    "tauri:dev:windows": "npm --prefix apps/windows run tauri:dev",
+    "tauri:build:windows": "npm --prefix apps/windows run tauri:build"
   }
 }

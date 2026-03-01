@@ -24,7 +24,7 @@
 - `main` への直接コミットを禁止し、機能ブランチで作業すること。
 - コミットは小さく保ち、原則「1テスト追加 + それを通す最小実装」を1単位とすること。
 - コミットメッセージは Conventional Commits（`feat:`, `test:`, `refactor:` など）を推奨する。
-- 仕様変更時は実装前に `SPECIFICATION.md` を更新すること。
+- 仕様変更時は実装前に `docs/SPECIFICATION.md` を更新すること。
 
 ## コーディング規約
 - python: pep8に従うこと。
