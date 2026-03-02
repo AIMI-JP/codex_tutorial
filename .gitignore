@@ -2,3 +2,5 @@ node_modules/
 dist/
 coverage/
 *.log
+apps/windows/src-tauri/target/
+apps/windows/src-tauri/gen/

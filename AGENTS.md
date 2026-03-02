@@ -28,6 +28,15 @@
 
 ## コーディング規約
 - python: pep8に従うこと。
+- Rust:
+  - フォーマットは `rustfmt` を必須とし、`cargo fmt --all -- --check` を通過させること。
+  - Lint は `clippy` を使用し、`cargo clippy --all-targets -- -D warnings` を基準とすること。
+  - エラーハンドリングは `Result` / `Option` を基本とし、`panic!` は不変条件違反や回復不能時に限定すること。
+  - `unwrap` / `expect` の常用を避け、必要時は失敗理由が明確になるメッセージを付与すること（特に本番コード）。
+  - `unsafe` を使う場合は最小スコープに閉じ、必要性と安全性根拠をコメントで明記すること。
+  - 公開APIの型は `Debug` などの標準トレイト実装を優先し、命名は Rust API Guidelines に従うこと。
+  - 依存クレートのデフォルト機能は安易に有効化せず、`default-features = false` を検討すること。
+  - Edition は安定版（`2021` 以上）を前提とし、移行時は `cargo fix --edition` の適用を検討すること。
 - TypeScript:
   - `tsconfig` は `strict: true` を前提にし、型エラーを残したままマージしない。
   - `any` は原則禁止。やむを得ない場合のみ、理由をコメントで明示して最小範囲で使う。
