@@ -7,6 +7,7 @@ Web アプリ（`apps/web`）と Windows アプリ（`apps/windows` / Tauri）�
 - [リポジトリ構成](#リポジトリ構成)
 - [前提](#前提)
 - [Docker で使う（推奨）](#docker-で使う推奨)
+- [コンテナ内で実装する運用](#コンテナ内で実装する運用)
 - [ローカルで使う（補足）](#ローカルで使う補足)
 - [主要コマンド](#主要コマンド)
 - [ドキュメント](#ドキュメント)
@@ -50,6 +51,33 @@ docker compose build rust-check
 docker compose run --rm rust-check cargo fmt --all -- --check
 docker compose run --rm rust-check cargo clippy --all-targets --all-features -- -D warnings
 docker compose run --rm rust-check cargo test --all-targets --all-features
+```
+
+## コンテナ内で実装する運用
+ホストに追加ツールを入れたくない場合は、`web-dev` を常駐させてその中で作業します。
+
+### 1. 初回セットアップ
+```bash
+docker compose run --rm node-setup
+docker compose up --build -d web-dev
+```
+
+### 2. 作業シェルに入る
+```bash
+docker compose exec web-dev bash
+```
+
+### 3. コンテナ内で実行する例
+```bash
+npm --prefix apps/web run test
+npm --prefix apps/web run typecheck
+npm --prefix apps/windows run test
+npm --prefix apps/windows run typecheck
+```
+
+### 4. 終了
+```bash
+docker compose down
 ```
 
 ## ローカルで使う（補足）
