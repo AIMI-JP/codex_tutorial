@@ -34,23 +34,27 @@
 ### 4.2 採用
 - 複数コンテナ構成を採用する。
 - ベースイメージは公式を利用する。
-  - Node系: `node:24-bookworm-slim`
-  - Rust系: `rust:1.85-bookworm`
+  - Node系: `node:24-bookworm-slim@sha256:...`
+  - Rust系: `rust:1.88-bookworm@sha256:...`
 - 追加APTは原則なし。必要時のみ対象サービスに限定して追加する。
 
 ## 5. 想定サービス（docker compose）
-### 5.1 `web-dev`
+### 5.1 `node-setup`（都度実行）
+- 用途: Node依存導入（`npm ci`）
+- 実行: `docker compose run --rm node-setup`
+
+### 5.2 `web-dev`
 - 用途: `apps/web` の開発サーバ
 - ポート: `5173:5173`
 - 実行: `npm --prefix apps/web run dev -- --host 0.0.0.0 --port 5173`
 
-### 5.2 `node-check`
+### 5.3 `node-check`
 - 用途: TypeScript側の `test` / `typecheck`
 - 実行例:
   - `docker compose run --rm node-check npm --prefix apps/web run test`
   - `docker compose run --rm node-check npm --prefix apps/windows run typecheck`
 
-### 5.3 `rust-check`（任意）
+### 5.4 `rust-check`（任意）
 - 用途: Rust側の `fmt` / `clippy` / `test`
 - 実行例:
   - `docker compose run --rm rust-check cargo fmt --all -- --check`
@@ -60,22 +64,25 @@
 ## 6. 実行順チェックリスト
 
 ### Phase 1: スコープ確定
-- [ ] P1-1: 本ドキュメントを正本として運用開始
-- [ ] P1-2: TauriのWindows実行/ビルドはホスト実行である旨を `SKILL.md` に明記
+- [x] P1-1: 本ドキュメントを正本として運用開始
+- [x] P1-2: TauriのWindows実行/ビルドはホスト実行である旨を `SKILL.md` に明記
 
 ### Phase 2: 依存固定
 - [ ] P2-1: `latest` 指定依存の固定化方針を決定
 - [ ] P2-2: lockfileを更新し、再現性を担保
-- [ ] P2-3: Docker内の依存導入は `npm ci` を原則とする方針を明記
+- [x] P2-3: Docker内の依存導入は `npm ci` を原則とする方針を明記
 
 ### Phase 3: Docker定義作成
-- [ ] P3-1: Node用 `Dockerfile` 作成（`node:24-bookworm-slim`, `web-dev`/`node-check` で共用）
-- [ ] P3-2: `docker-compose.yml` 作成（`web-dev`, `node-check`, `rust-check`）
-- [ ] P3-3: `.dockerignore` 作成
-- [ ] P3-4: bind mount + named volume（`node_modules`）を設定
+- [x] P3-1: Node用 `Dockerfile` 作成（`node:24-bookworm-slim`, `web-dev`/`node-check` で共用）
+- [x] P3-2: `docker-compose.yml` 作成（`web-dev`, `node-check`, `rust-check`）
+- [x] P3-3: `.dockerignore` 作成
+- [x] P3-4: bind mount + named volume（`node_modules`）を設定
+- [x] P3-5: Node系サービスを非rootユーザーで実行
+- [x] P3-6: Node系ベースイメージをdigest固定
+- [x] P3-7: Rust系ベースイメージをdigest固定
 
 ### Phase 4: 品質ゲート統合
-- [ ] P4-1: Docker経由 `test` / `typecheck` コマンドを定義
+- [x] P4-1: Docker経由 `test` / `typecheck` コマンドを定義
 - [ ] P4-2: Rust品質ゲート（`fmt/clippy/test`）を必要範囲でDocker化
 - [ ] P4-3: CIとローカルの実行コマンドを一致させる
 
@@ -85,7 +92,7 @@
 - [ ] P5-3: 必要に応じて `rust-check` の `fmt/clippy/test` を確認
 
 ### Phase 6: 文書反映
-- [ ] P6-1: `SKILL.md` にDocker利用手順を追記
+- [x] P6-1: `SKILL.md` にDocker利用手順を追記
 - [ ] P6-2: 手動E2E文書と矛盾がないことを確認
 
 ## 7. 完了条件（DoD）

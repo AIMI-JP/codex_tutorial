@@ -1,0 +1,17 @@
+.git
+.gitignore
+.env
+.env.*
+*.pem
+*.key
+*.crt
+secrets/
+node_modules
+**/node_modules
+dist
+**/dist
+coverage
+**/coverage
+apps/windows/src-tauri/target
+apps/windows/src-tauri/gen
+*.log

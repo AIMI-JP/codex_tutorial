@@ -103,3 +103,36 @@ npm --prefix apps/web run typecheck
 2. 単体テストで計算ロジックを固める
 3. UI を結合テスト駆動で接続する
 4. 回帰ケースと受け入れ基準を固定する
+
+## 5. Docker 開発手順（Web/品質ゲート）
+
+### 5.1 前提
+1. Docker / Docker Compose が利用可能であること
+2. リポジトリルート（`codex_tutorial`）でコマンド実行すること
+
+### 5.2 Web 開発サーバ起動
+```bash
+docker compose run --rm node-setup
+docker compose up --build web-dev
+```
+
+### 5.3 TypeScript 品質ゲート（Docker内）
+```bash
+docker compose run --rm node-setup
+docker compose run --rm node-check npm --prefix apps/web run test
+docker compose run --rm node-check npm --prefix apps/web run typecheck
+docker compose run --rm node-check npm --prefix apps/windows run test
+docker compose run --rm node-check npm --prefix apps/windows run typecheck
+```
+
+### 5.4 Rust 品質ゲート（Docker内, 任意）
+```bash
+docker compose build rust-check
+docker compose run --rm rust-check cargo fmt --all -- --check
+docker compose run --rm rust-check cargo clippy --all-targets --all-features -- -D warnings
+docker compose run --rm rust-check cargo test --all-targets --all-features
+```
+
+### 5.5 注意点
+- `tauri dev` / `tauri build`（Windows向け）は Docker 対象外とし、ホスト Windows 環境で実行する。
+- Node依存は `node-setup` サービスで明示的に導入する（`npm ci`）。
